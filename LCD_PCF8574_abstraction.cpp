@@ -101,12 +101,16 @@ void LCD_PCF8574::home()
 
 bool LCD_PCF8574::setCursor(uint8_t col, uint8_t row)
 {
-    // TODO: make this work
-    if (col >= colCount_ || row >= rowCount_)
-    {
-        return false;
+    switch (row) {
+        case 0:
+            col |= 0x80;
+            break;
+        case 1:
+            col |= 0xC0;
+            break;
     }
-    return sendByte_(0x80 | (rowOffsets_[row] + col));
+
+    return send(COMMAND, col);
 }
 
 size_t LCD_PCF8574::write(char c)
